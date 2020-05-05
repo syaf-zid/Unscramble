@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="words">
+        <item>APPLE</item>
+        <item>COMPUTER</item>
+        <item>TABLET</item>
+        <item>TELEVISION</item>
+        <item>ANDROID</item>
+        <item>KEYBOARD</item>
+        <item>PLAYSTATION</item>
+    </string-array>
+</resources>
