@@ -84,23 +84,23 @@ public class GameActivity extends AppCompatActivity {
             wordLayout.addView(charViews[c]);
         }
 
-        String[] lettersCol = new String[currWord.length()];
         String[] wordSplit = currWord.split("");
         ArrayList<String> wordSplitList = new ArrayList<>(Arrays.asList(wordSplit));
-        System.out.println(wordSplitList);
         wordSplitList.remove(0);
+        System.out.println(wordSplitList);
 
         // please use shuffle
         // convert array to arraylist for shuffle
-         Collections.shuffle(wordSplitList);
+        Collections.shuffle(wordSplitList);
 
          // To remove duplicate letters in a word
         LinkedHashSet<String> hashSet = new LinkedHashSet<>(wordSplitList);
         ArrayList<String> wordSplitListWD = new ArrayList<>(hashSet);
         String[] wordSplitArr = new String[wordSplitListWD.size()];
         wordSplitArr = wordSplitListWD.toArray(wordSplitArr);
-        System.out.println(wordSplitArr);
+        System.out.println(Arrays.toString(wordSplitArr));
 
+        String[] lettersCol = new String[wordSplitArr.length];
         System.arraycopy(wordSplitArr, 0, lettersCol, 0, lettersCol.length);
         ltrAdapt = new LetterAdapter(this, lettersCol);
         letters.setAdapter(ltrAdapt);
