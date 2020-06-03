@@ -153,7 +153,7 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         GameActivity.this.playGame();
-                        strLives = "You have 3 tries remaining";
+                        strLives = "You have 3 lives remaining";
                         tvLives.setText(strLives);
                     }
                 });
@@ -178,7 +178,7 @@ public class GameActivity extends AppCompatActivity {
         } else {
             disableBtns();
 
-            strLives = "You are out of tries";
+            strLives = "You are out of lives";
             tvLives.setText(strLives);
 
             AlertDialog.Builder loseAlert = new AlertDialog.Builder(this);
