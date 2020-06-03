@@ -57,7 +57,7 @@ public class GameActivity extends AppCompatActivity {
         currWord = "";
 
         tvLives = findViewById(R.id.textViewLives);
-        strLives = "You have 3 tries.";
+        strLives = "You have 3 lives remaining.";
         tvLives.setText(strLives);
 
         wordLayout = findViewById(R.id.word);
@@ -71,6 +71,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void playGame() {
+        strLives = "You have 3 lives remaining.";
         marker = 0;
 
         int arrayCount = words.size();
@@ -152,6 +153,8 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         GameActivity.this.playGame();
+                        strLives = "You have 3 tries remaining";
+                        tvLives.setText(strLives);
                     }
                 });
 
@@ -167,15 +170,16 @@ public class GameActivity extends AppCompatActivity {
         } else if (currPart < numParts) {
             currPart++;
             if(currPart == 1) {
-                strLives = "You have 2 tries remaining.";
+                strLives = "You have 2 lives remaining.";
             } else if(currPart == 2) {
-                strLives = "You have 1 try remaining.";
-            } else {
-                strLives = "You are out of tries.";
+                strLives = "You have 1 life remaining.";
             }
             tvLives.setText(strLives);
         } else {
             disableBtns();
+
+            strLives = "You are out of tries";
+            tvLives.setText(strLives);
 
             AlertDialog.Builder loseAlert = new AlertDialog.Builder(this);
             loseAlert.setCancelable(false);
@@ -185,6 +189,8 @@ public class GameActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     GameActivity.this.playGame();
+                    strLives = "You have 3 lives remaining.";
+                    tvLives.setText(strLives);
                 }
             });
 
