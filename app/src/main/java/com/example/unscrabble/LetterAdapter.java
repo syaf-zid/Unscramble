@@ -8,18 +8,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 
+import java.util.ArrayList;
+
 public class LetterAdapter extends BaseAdapter {
-    private String[] letters;
+    private ArrayList<String> letters;
     private LayoutInflater letterInflater;
 
-    public LetterAdapter(Context c, String[] objs) {
+    public LetterAdapter(Context c, ArrayList<String> objs) {
         letters = objs;
         letterInflater = LayoutInflater.from(c);
     }
 
     @Override
     public int getCount() {
-        return letters.length;
+        return letters.size();
     }
 
     @Override
@@ -36,16 +38,11 @@ public class LetterAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         // create a button for the letter at this position in the alphabet
         Button letterBtn;
-        if(convertView == null) {
-            // inflate the button layout
-            letterBtn = (Button) letterInflater.inflate(R.layout.letter, parent, false);
-        } else {
-            letterBtn = (Button) convertView;
-        }
+        letterBtn = (Button) letterInflater.inflate(R.layout.letter, parent, false);
 
         letterBtn.setTextColor(Color.WHITE);
         // set the text to this letter
-        letterBtn.setText(letters[position]);
+        letterBtn.setText(letters.get(position));
         return letterBtn;
     }
 }

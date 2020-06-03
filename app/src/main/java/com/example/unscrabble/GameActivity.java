@@ -2,6 +2,7 @@ package com.example.unscrabble;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -28,10 +29,12 @@ public class GameActivity extends AppCompatActivity {
     GridView letters;
     LetterAdapter ltrAdapt;
     ImageView imageView;
+    ArrayList<String> wordSplitList, correctAns, testArr;
 
     private int currPart;
     private int numChars;
     private int numCorr;
+    int marker = 0;
     ArrayList<ImageData> words = new ArrayList<>();
 
     @Override
@@ -54,10 +57,16 @@ public class GameActivity extends AppCompatActivity {
         wordLayout = findViewById(R.id.word);
         letters = findViewById(R.id.letters);
 
+        testArr = new ArrayList<>();
+        ltrAdapt = new LetterAdapter(this, testArr);
+        letters.setAdapter(ltrAdapt);
+
         playGame();
     }
 
     private void playGame() {
+        marker = 0;
+
         int arrayCount = words.size();
         int randomInt = random.nextInt(arrayCount);
         String newWord = words.get(randomInt).getAnswer();
@@ -85,57 +94,64 @@ public class GameActivity extends AppCompatActivity {
         }
 
         String[] wordSplit = currWord.split("");
-        ArrayList<String> wordSplitList = new ArrayList<>(Arrays.asList(wordSplit));
+        wordSplitList = new ArrayList<>(Arrays.asList(wordSplit));
         wordSplitList.remove(0);
         System.out.println(wordSplitList);
 
+         // To remove duplicate letters in a word
+//        LinkedHashSet<String> hashSet = new LinkedHashSet<>(wordSplitList);
+//        ArrayList<String> wordSplitListWD = new ArrayList<>(hashSet);
+
         // please use shuffle
         // convert array to arraylist for shuffle
+        correctAns = new ArrayList<>(wordSplitList);
         Collections.shuffle(wordSplitList);
 
-         // To remove duplicate letters in a word
-        LinkedHashSet<String> hashSet = new LinkedHashSet<>(wordSplitList);
-        ArrayList<String> wordSplitListWD = new ArrayList<>(hashSet);
-        String[] wordSplitArr = new String[wordSplitListWD.size()];
-        wordSplitArr = wordSplitListWD.toArray(wordSplitArr);
-        System.out.println(Arrays.toString(wordSplitArr));
+        // use arraylist
+        // adapter should be created once
+        testArr.clear();
+        testArr.addAll(wordSplitList);
 
-        String[] lettersCol = new String[wordSplitArr.length];
-        System.arraycopy(wordSplitArr, 0, lettersCol, 0, lettersCol.length);
-        ltrAdapt = new LetterAdapter(this, lettersCol);
-        letters.setAdapter(ltrAdapt);
+        ltrAdapt.notifyDataSetChanged();
 
         currPart = 0;
         numChars = currWord.length();
         numCorr = 0;
     }
 
-    int marker = 0;
     public void letterPressed(View v) {
-            String ltr = ((TextView) v).getText().toString();
-            char letterChar = ltr.charAt(0);
+        String ltr = ((TextView) v).getText().toString();
+        int ltrIndex = wordSplitList.indexOf(ltr);
+//        String letterChar = Character.toString(ltr.charAt(0));
+        System.out.println(ltr);
+        System.out.println(ltrIndex);
 
-            boolean correct = false;
-            // use manual loop, check using if else
-            // increase i if the letter matches correspondingly
-            // use marker instead of i
-            for(int i = 0; i < currWord.length(); i++) {
-                if(currWord.charAt(i) == letterChar) {
-                    correct = true;
-                    numCorr++;
-                    charViews[i].setTextColor(Color.BLACK);
 
-                    v.setEnabled(false);
-                    v.setBackgroundResource(R.drawable.letter_down);
-                }
-            }
+        boolean correct = false;
+        // use manual loop, check using if else
+        // increase i if the letter matches correspondingly
+        // use marker instead of i
+
+        Log.d("debug", ltr + " " + correctAns.get(marker));
+        if(ltr.equals(correctAns.get(marker))) {
+            correct = true;
+            numCorr++;
+            charViews[marker].setTextColor(Color.BLACK);
+
+            v.setEnabled(false);
+            v.setBackgroundResource(R.drawable.letter_down);
+
+            marker += 1;
+        }
 
         int numParts = 3;
+        // add image to show number of lives
         if(correct) {
             if(numCorr == numChars) {
                 disableBtns();
 
                 AlertDialog.Builder winAlert = new AlertDialog.Builder(this);
+                winAlert.setCancelable(false);
                 winAlert.setTitle("YAY");
                 winAlert.setMessage("You win!\n\nThe answer was:\n" + currWord);
                 winAlert.setPositiveButton("Play Again", new DialogInterface.OnClickListener() {
@@ -160,6 +176,7 @@ public class GameActivity extends AppCompatActivity {
             disableBtns();
 
             AlertDialog.Builder loseAlert = new AlertDialog.Builder(this);
+            loseAlert.setCancelable(false);
             loseAlert.setTitle("OOPS");
             loseAlert.setMessage("You lose!\n\nThe answer was:\n" + currWord);
             loseAlert.setPositiveButton("Play Again", new DialogInterface.OnClickListener() {
