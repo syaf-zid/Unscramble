@@ -30,11 +30,13 @@ public class GameActivity extends AppCompatActivity {
     LetterAdapter ltrAdapt;
     ImageView imageView;
     ArrayList<String> wordSplitList, correctAns, testArr;
+    TextView tvLives;
 
     private int currPart;
     private int numChars;
     private int numCorr;
     int marker = 0;
+    String strLives = "";
     ArrayList<ImageData> words = new ArrayList<>();
 
     @Override
@@ -54,6 +56,10 @@ public class GameActivity extends AppCompatActivity {
         random = new Random();
         currWord = "";
 
+        tvLives = findViewById(R.id.textViewLives);
+        strLives = "You have 3 tries.";
+        tvLives.setText(strLives);
+
         wordLayout = findViewById(R.id.word);
         letters = findViewById(R.id.letters);
 
@@ -71,7 +77,7 @@ public class GameActivity extends AppCompatActivity {
         int randomInt = random.nextInt(arrayCount);
         String newWord = words.get(randomInt).getAnswer();
 
-        while(newWord.equals(currWord)) newWord = words.get(randomInt).getAnswer();
+        while (newWord.equals(currWord)) newWord = words.get(randomInt).getAnswer();
         currWord = newWord;
         imageView.setImageResource(words.get(randomInt).getImage());
 
@@ -79,7 +85,7 @@ public class GameActivity extends AppCompatActivity {
         wordLayout.removeAllViews();
 
         // create the "underscores" for each letters
-        for(int c = 0; c < currWord.length(); c++) {
+        for (int c = 0; c < currWord.length(); c++) {
             charViews[c] = new TextView(this);
             charViews[c].setText("" + currWord.charAt(c));
 
@@ -95,15 +101,7 @@ public class GameActivity extends AppCompatActivity {
 
         String[] wordSplit = currWord.split("");
         wordSplitList = new ArrayList<>(Arrays.asList(wordSplit));
-        wordSplitList.remove(0);
         System.out.println(wordSplitList);
-
-         // To remove duplicate letters in a word
-//        LinkedHashSet<String> hashSet = new LinkedHashSet<>(wordSplitList);
-//        ArrayList<String> wordSplitListWD = new ArrayList<>(hashSet);
-
-        // please use shuffle
-        // convert array to arraylist for shuffle
         correctAns = new ArrayList<>(wordSplitList);
         Collections.shuffle(wordSplitList);
 
@@ -122,18 +120,14 @@ public class GameActivity extends AppCompatActivity {
     public void letterPressed(View v) {
         String ltr = ((TextView) v).getText().toString();
         int ltrIndex = wordSplitList.indexOf(ltr);
-//        String letterChar = Character.toString(ltr.charAt(0));
         System.out.println(ltr);
         System.out.println(ltrIndex);
 
 
         boolean correct = false;
-        // use manual loop, check using if else
-        // increase i if the letter matches correspondingly
-        // use marker instead of i
 
         Log.d("debug", ltr + " " + correctAns.get(marker));
-        if(ltr.equals(correctAns.get(marker))) {
+        if (ltr.equals(correctAns.get(marker))) {
             correct = true;
             numCorr++;
             charViews[marker].setTextColor(Color.BLACK);
@@ -144,10 +138,10 @@ public class GameActivity extends AppCompatActivity {
             marker += 1;
         }
 
-        int numParts = 3;
+        int numParts = 2;
         // add image to show number of lives
-        if(correct) {
-            if(numCorr == numChars) {
+        if (correct) {
+            if (numCorr == numChars) {
                 disableBtns();
 
                 AlertDialog.Builder winAlert = new AlertDialog.Builder(this);
@@ -170,8 +164,16 @@ public class GameActivity extends AppCompatActivity {
 
                 winAlert.show();
             }
-        } else if(currPart < numParts) {
+        } else if (currPart < numParts) {
             currPart++;
+            if(currPart == 1) {
+                strLives = "You have 2 tries remaining.";
+            } else if(currPart == 2) {
+                strLives = "You have 1 try remaining.";
+            } else {
+                strLives = "You are out of tries.";
+            }
+            tvLives.setText(strLives);
         } else {
             disableBtns();
 
@@ -199,7 +201,7 @@ public class GameActivity extends AppCompatActivity {
 
     public void disableBtns() {
         int numLetters = letters.getChildCount();
-        for(int j = 0; j < numLetters; j++) {
+        for (int j = 0; j < numLetters; j++) {
             letters.getChildAt(j);
         }
     }

@@ -14,7 +14,7 @@
         android:layout_weight="4"
         android:fontFamily="@font/changa_one"
         android:gravity="center_vertical"
-        android:text="UNSCRABBLE"
+        android:text="UNSCRAMBLE"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textSize="56sp" />
